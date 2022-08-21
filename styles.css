@@ -1,0 +1,46 @@
+body {
+    text-align: center;
+}
+
+#top {
+    height: 100px;
+}
+
+#middle {
+    height: 300px;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgb(100, 100, 100);
+    display: flex;
+    flex-direction: column;
+    border: black solid 1px;
+    border-radius: 15px;
+}
+
+#display {
+    flex-grow: 1;
+    background: rgb(200,200,200);
+    border-radius: 15px;
+    
+}
+
+#keyboard {
+    flex-grow: 4;
+    display: flex;
+    height: 100 px;
+    width: 200 px;
+    background: rgb(240, 240, 240);
+    flex-flow: row wrap;
+    border-radius: 15px;
+    justify-content: center;
+    align-content: center;
+}
+
+.key {
+    border-radius: 15px;
+    border: black solid 1px;
+    width: 50px;
+    height: 40px;
+
+}
