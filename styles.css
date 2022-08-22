@@ -12,7 +12,7 @@ body {
 
 #middle {
     height: 410px;
-    width: 300px;
+    width: 400px;
     margin-left: auto;
     margin-right: auto;
     background-color: rgb(100, 100, 100);
@@ -56,7 +56,7 @@ body {
 .key {
     border-radius: 15px;
     border: black solid 1px;
-    width: 62px;
+    width: 86px;
     height: 55px;
     font-size: 20px;
 }

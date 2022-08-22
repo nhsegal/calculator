@@ -3,6 +3,13 @@ let state = 0;
 let acceptDecimal = true;
 let display = document.querySelector('#display');
 let justEqualed = false;
+let maxLength = 8;
+let maxDigits = 8;
+
+const numberFormat = new Intl.NumberFormat({
+    maximumFractionDigits: maxDigits,
+    notation: "standard",
+});
 
 for (btn of btns) {
     //btn.addEventListener('mouseon', highlight);
@@ -41,8 +48,8 @@ function readInput(e) {
             else if (expression.firstNum[0] === '-') {
                 expression.firstNum = expression.firstNum.slice(1);
             }
-            display.textContent = expression.firstNum;
-            
+            numberFormat.maximumFractionDigits = maxLength - firstNum.length - 1;
+            display.textContent = numberFormat.format((Number(expression.firstNum)));
         }
 
         if (state === 1) {
@@ -52,22 +59,36 @@ function readInput(e) {
             else if (expression.secondNum[0] === '-') {
                 expression.secondNum = expression.secondNum.slice(1);
             }
-            display.textContent = expression.secondNum;
-        }
-        debug();
+            display.textContent = numberFormat.format((Number(expression.secondNum)));
+        } 
         return;   
     }
+    
+    if (input === '%') {
+        if (state === 0) {
+            expression.firstNum = expression.firstNum/100;
+            display.textContent = numberFormat.format((Number(expression.firstNum)));
+        }
+        if (state === 1) {
+            expression.secondNum = expression.secondNum/100;
+            display.textContent = numberFormat.format((Number(expression.secondNum)));
+        }
         
+    }
+
     if (state === 0) {
         if ((input >= 0 && input <=9) || (input === '.' && acceptDecimal)) {
             if (justEqualed) {
                 expression.firstNum = input;
+                if (input === '.'){
+                    acceptDecimal = false;
+                }
             }
-            else{
+            else if (expression.firstNum.length < maxLength ){
                 expression.firstNum += input;
-            }
-            if (input === '.'){
-                acceptDecimal = false;
+                if (input === '.'){
+                    acceptDecimal = false;
+                }
             }
         }
         else if (['+','-','*','/'].some((e)=> e===input)) {
@@ -75,8 +96,7 @@ function readInput(e) {
             acceptDecimal = true;
             state++;
         }           
-        display.textContent = expression.firstNum;
-        debug();
+        display.textContent = numberFormat.format((Number(expression.firstNum)));
         return;
     }
 
@@ -103,7 +123,8 @@ function readInput(e) {
                     display.textContent = multiply(firstNum,secondNum);
                     break;
                 case ('/'):
-                    display.textContent = divide(firstNum,secondNum);
+                    display.textContent = numberFormat.format(divide(firstNum,secondNum));
+                    
                     break;
                 default:
                     console.log("error.")
@@ -121,7 +142,6 @@ function readInput(e) {
                 expression.firstNum = display.textContent; 
             }
         } 
-        debug();
         return;
     }
 }
@@ -161,15 +181,14 @@ function operate(a, b, operator) {
 }
 
 function allClear(){
-    console.log("clearing")
     display.textContent = 0;
     state = 0;
     expression.firstNum = '';
     expression.operation = undefined;
     expression.secondNum = '';
     acceptDecimal = true;
-   
 }
+
 
 function debug(){
     console.log(`First is ${expression.firstNum}.`)
