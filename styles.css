@@ -8,6 +8,7 @@ body {
 #top {
     height: 100px;
     font-size: 30px;
+    padding-top: 50px;
 }
 
 #middle {

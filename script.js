@@ -85,6 +85,7 @@ function readInput(e) {
     if (state === 0) {
         if ((input >= 0 && input <=9) || (input === '.' && acceptDecimal)) {
             if (justEqualed) {
+                justEqualed = false;
                 firstNum = input;
                 if (input === '.'){
                     acceptDecimal = false;
@@ -215,7 +216,6 @@ function writeToDisplay() {
     console.log('writing')
     if (state === 0 || secondNum === '0') {
         display.textContent = firstNum;
-        console.log(firstNum)
         return;
     }
     display.textContent = secondNum;
@@ -224,23 +224,11 @@ function writeToDisplay() {
 
 
 
-    /*
-    if (state === 0){
-        display.textContent = firstNum;
-        return;
-    }
-    else {
-        display.textContent = secondNum;
-        return;
-    }
-    */
-
-
 function debug(){
     console.clear();
-    console.log(`Type of First is ${typeof(firstNum)}`)
+    console.log(`First is ${firstNum}`)
     console.log(`Operation is ${operation}.`)
-    console.log(`Type of second is ${typeof(secondNum)}`)
+    console.log(`Second is ${secondNum}`)
     console.log(`State is ${state}.`)
-    console.log(`AcceptDecimal is ${acceptDecimal}.`)
+    //console.log(`AcceptDecimal is ${acceptDecimal}.`)
 }
