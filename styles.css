@@ -1,4 +1,10 @@
-@import url('http://fonts.cdnfonts.com/css/scientific-calculator-lcd');
+@font-face {
+    font-family: 'Scientific Calculator LCD';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Scientific Calculator LCD'), url('https://fonts.cdnfonts.com/s/40612/ScientificCalculatorLcdRegular-Kn7X.woff') format('woff');
+}
+
 body {
     text-align: center;
     font-family: 'Scientific Calculator LCD', sans-serif;

@@ -223,7 +223,7 @@ function writeToDisplay() {
 function pressEffect(e){
     let key = document.querySelector(`button[value="${e.target.value}"]`);
     key.classList.add('pressed');
-    console.log(key)
+ 
 }
 
 function removeTransition(e) {
