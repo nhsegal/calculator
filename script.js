@@ -7,7 +7,7 @@ let maxLength = 9;
 
 //Need to set max digits, convert to/from sci not 
 const numberFormat = new Intl.NumberFormat('en-US', {
-    maximumSignificantDigits: 9,
+    maximumSignificantDigits: 8,
     maximumFractionDigits: 9,
     useGrouping: false
   });
@@ -148,7 +148,8 @@ function readInput(e) {
                 default:
                     console.log("error.")
             }
-            firstNum = result.toString();
+            let formattedNumber = numberFormat.format(result)
+            firstNum = formattedNumber.toString();
             secondNum = '0';
             writeToDisplay();
             if (input === '=') {
