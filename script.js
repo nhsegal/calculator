@@ -3,13 +3,18 @@ let state = 0;
 let acceptDecimal = true;
 let display = document.querySelector('#display');
 let justEqualed = false;
-let maxLength = 8;
-let maxDigits = 8;
+let maxLength = 9;
 
-const numberFormat = new Intl.NumberFormat({
-    maximumFractionDigits: maxDigits,
-    notation: "standard",
-});
+const numberFormat = new Intl.NumberFormat('en-US', {
+    maximumSignificantDigits: 9,
+    maximumFractionDigits: 9,
+    useGrouping: false
+  });
+ 
+
+var sNumber = '1124.5'
+var number = Number(sNumber);
+console.log(numberFormat.format(1000000))
 
 for (btn of btns) {
     //btn.addEventListener('mouseon', highlight);
