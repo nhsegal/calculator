@@ -17,15 +17,12 @@ let firstNum = '0';
 let secondNum = '0';
 let operation = undefined;
 
-/*
-var sNumber = '1124.5'
-var number = Number(sNumber);
-console.log(numberFormat.format(1000000))
-*/
+
 
 for (btn of btns) {
-    //btn.addEventListener('mouseon', highlight);
-    btn.addEventListener('click', readInput);  
+    btn.addEventListener('click', readInput); 
+    btn.addEventListener('click', pressEffect);  
+    btn.addEventListener('transitionend', removeTransition);
 }
 
 
@@ -44,7 +41,7 @@ function readInput(e) {
     let input = e.target.value;
     if (input === 'AC') {
         allClear();
-        debug();
+        //debug();
         return;
     }
 
@@ -67,7 +64,7 @@ function readInput(e) {
             }
         } 
         writeToDisplay();
-        debug();
+        //debug();
         return;   
     }
     
@@ -79,7 +76,7 @@ function readInput(e) {
             secondNum = secondNum/100;
         }
         writeToDisplay();
-        debug();
+        //debug();
     }
 
     if (state === 0) {
@@ -109,7 +106,7 @@ function readInput(e) {
             state++;
         }           
         writeToDisplay();
-        debug();
+        //debug();
         return;
     }
 
@@ -127,7 +124,7 @@ function readInput(e) {
                 }
             }
             writeToDisplay();
-            debug();
+            //debug();
             return;
         }
         else if (['+','-','*','/','='].some((e)=> e===input)) {
@@ -164,7 +161,7 @@ function readInput(e) {
                 operation = input;
             }
         } 
-        debug();
+        //debug();
         return;
     }
 }
@@ -213,7 +210,7 @@ function allClear(){
 }
 
 function writeToDisplay() {
-    console.log('writing')
+   
     if (state === 0 || secondNum === '0') {
         display.textContent = firstNum;
         return;
@@ -222,6 +219,16 @@ function writeToDisplay() {
     return;
 }
 
+function pressEffect(e){
+    let key = document.querySelector(`button[value="${e.target.value}"]`);
+    key.classList.add('pressed');
+    console.log(key)
+}
+
+function removeTransition(e) {
+    if (e.propertyName !== 'transform') return;
+    this.classList.remove('pressed'); 
+}
 
 
 function debug(){

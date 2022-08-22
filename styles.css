@@ -60,6 +60,7 @@ body {
     width: 86px;
     height: 55px;
     font-size: 20px;
+    transition: all .05s ease;
 }
 
 .num {
@@ -68,4 +69,10 @@ body {
 
 #clear {
     background: rgb(200,130,130);
+}
+
+.pressed {
+    transform: scale(0.9);
+    border-color: black;
+    box-shadow: 0 0 1rem rgb(40, 40, 40);
 }
