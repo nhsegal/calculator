@@ -5,6 +5,7 @@ let display = document.querySelector('#display');
 let justEqualed = false;
 let maxLength = 9;
 
+//Need to set max digits, convert to/from sci not 
 const numberFormat = new Intl.NumberFormat('en-US', {
     maximumSignificantDigits: 9,
     maximumFractionDigits: 9,
@@ -12,20 +13,22 @@ const numberFormat = new Intl.NumberFormat('en-US', {
   });
  
 
+let firstNum = '0';
+let secondNum = '0';
+let operation = undefined;
+
+/*
 var sNumber = '1124.5'
 var number = Number(sNumber);
 console.log(numberFormat.format(1000000))
+*/
 
 for (btn of btns) {
     //btn.addEventListener('mouseon', highlight);
     btn.addEventListener('click', readInput);  
 }
 
-const expression = { 
-    firstNum: '',
-    secondNum: '',
-    operation: undefined,
-}
+
 
 // In state 0, write to firstNum or operation. 
 // In state 1, write to secondNum
@@ -41,112 +44,126 @@ function readInput(e) {
     let input = e.target.value;
     if (input === 'AC') {
         allClear();
+        debug();
         return;
     }
 
     if (input === '+/-') {
-        console.log ('here')
         if (state === 0) {
-            if (expression.firstNum[0] != '-' && expression.firstNum[0] != ''){
-                expression.firstNum = '-' + expression.firstNum; 
+            if (firstNum[0] != '-' && firstNum[0] != ''){
+                firstNum = '-' + firstNum; 
             }
-            else if (expression.firstNum[0] === '-') {
-                expression.firstNum = expression.firstNum.slice(1);
+            else if (firstNum[0] === '-') {
+                firstNum = firstNum.slice(1);
             }
-            numberFormat.maximumFractionDigits = maxLength - firstNum.length - 1;
-            display.textContent = numberFormat.format((Number(expression.firstNum)));
         }
 
         if (state === 1) {
-            if (expression.secondNum[0] != '-' && expression.secondNum[0] != ''){
-                expression.secondNum = '-' + expression.secondNum; 
+            if (secondNum[0] != '-' && secondNum[0] != ''){
+                secondNum = '-' + secondNum; 
             }
-            else if (expression.secondNum[0] === '-') {
-                expression.secondNum = expression.secondNum.slice(1);
+            else if (secondNum[0] === '-') {
+                secondNum = secondNum.slice(1);
             }
-            display.textContent = numberFormat.format((Number(expression.secondNum)));
         } 
+        writeToDisplay();
+        debug();
         return;   
     }
     
     if (input === '%') {
         if (state === 0) {
-            expression.firstNum = expression.firstNum/100;
-            display.textContent = numberFormat.format((Number(expression.firstNum)));
+            firstNum = firstNum/100;
         }
         if (state === 1) {
-            expression.secondNum = expression.secondNum/100;
-            display.textContent = numberFormat.format((Number(expression.secondNum)));
+            secondNum = secondNum/100;
         }
-        
+        writeToDisplay();
+        debug();
     }
 
     if (state === 0) {
         if ((input >= 0 && input <=9) || (input === '.' && acceptDecimal)) {
             if (justEqualed) {
-                expression.firstNum = input;
+                firstNum = input;
                 if (input === '.'){
                     acceptDecimal = false;
                 }
             }
-            else if (expression.firstNum.length < maxLength ){
-                expression.firstNum += input;
+            else if (firstNum.length < maxLength ){
+                if (firstNum === '0' && input != '.') {
+                    firstNum = input;
+                }
+                else {
+                    firstNum += input;
+                }
                 if (input === '.'){
                     acceptDecimal = false;
                 }
             }
         }
         else if (['+','-','*','/'].some((e)=> e===input)) {
-            expression.operation = input;
+            operation = input;
             acceptDecimal = true;
             state++;
         }           
-        display.textContent = numberFormat.format((Number(expression.firstNum)));
+        writeToDisplay();
+        debug();
         return;
     }
 
     if (state === 1) {
         if ((input >= 0 && input <=9) || (input === '.' && acceptDecimal)) {
-            expression.secondNum += input;
-            if (input === '.'){
-                acceptDecimal = false;
+            if (secondNum.length < maxLength) {
+                if (secondNum === '0' && input != '.') {
+                    secondNum = input;
+                }
+                else {
+                    secondNum += input;
+                }
+                if (input === '.'){
+                    acceptDecimal = false;
+                }
             }
-            display.textContent = expression.secondNum;
+            writeToDisplay();
+            debug();
+            return;
         }
         else if (['+','-','*','/','='].some((e)=> e===input)) {
             acceptDecimal = true;
-            let firstNum = Number(expression.firstNum);
-            let secondNum = Number(expression.secondNum);
-            switch (expression.operation) {
+            firstNum = Number(firstNum);
+            secondNum = Number(secondNum);
+            let result;
+            switch (operation) {
                 case ('+'):
-                    display.textContent = add(firstNum,secondNum);
+                    result = add(firstNum,secondNum);
                     break;
                 case ('-'):
-                    display.textContent = subtract(firstNum,secondNum);
+                    result = subtract(firstNum,secondNum);
                     break;
                 case ('*'):
-                    display.textContent = multiply(firstNum,secondNum);
+                    result = multiply(firstNum,secondNum);
                     break;
                 case ('/'):
-                    display.textContent = numberFormat.format(divide(firstNum,secondNum));
-                    
+                    result = numberFormat.format(divide(firstNum,secondNum));          
                     break;
                 default:
                     console.log("error.")
             }
-            expression.secondNum = '';
+            firstNum = result.toString();
+            secondNum = '0';
+            writeToDisplay();
             if (input === '=') {
                 justEqualed = true;
                 state = 0;   
-                expression.operation = undefined;
-                expression.firstNum = display.textContent; 
+                operation = undefined;
             }
             else {
                 state = 1;   
-                expression.operation = input;
-                expression.firstNum = display.textContent; 
+                operation = input;
             }
         } 
+        debug();
         return;
     }
 }
@@ -188,17 +205,42 @@ function operate(a, b, operator) {
 function allClear(){
     display.textContent = 0;
     state = 0;
-    expression.firstNum = '';
-    expression.operation = undefined;
-    expression.secondNum = '';
+    firstNum = '0';
+    operation = undefined;
+    secondNum = '0';
     acceptDecimal = true;
 }
 
+function writeToDisplay() {
+    console.log('writing')
+    if (state === 0 || secondNum === '0') {
+        display.textContent = firstNum;
+        console.log(firstNum)
+        return;
+    }
+    display.textContent = secondNum;
+    return;
+}
+
+
+
+    /*
+    if (state === 0){
+        display.textContent = firstNum;
+        return;
+    }
+    else {
+        display.textContent = secondNum;
+        return;
+    }
+    */
+
 
 function debug(){
-    console.log(`First is ${expression.firstNum}.`)
-    console.log(`Operation is ${expression.operation}.`)
-    console.log(`Second is ${expression.secondNum}.`)
+    console.clear();
+    console.log(`Type of First is ${typeof(firstNum)}`)
+    console.log(`Operation is ${operation}.`)
+    console.log(`Type of second is ${typeof(secondNum)}`)
     console.log(`State is ${state}.`)
     console.log(`AcceptDecimal is ${acceptDecimal}.`)
 }
